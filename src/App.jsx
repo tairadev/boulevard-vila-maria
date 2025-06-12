@@ -32,6 +32,67 @@ function App() {
       })
   }
 
+  const handlePrintAsImage = async () => {
+  const node = cardRef.current
+  if (!node) return
+
+  try {
+    const dataUrl = await toJpeg(node, {
+      quality: 1,
+      backgroundColor: 'white',
+      width: 600,
+      height: 800,
+    })
+
+    const printWindow = window.open('', '_blank', 'width=600,height=800')
+    if (!printWindow) return
+
+    const html = `
+      <html>
+        <head>
+          <title>Impressão</title>
+          <style>
+            @page {
+              size: 9cm 12cm;
+              margin: 0;
+            }
+            body {
+              margin: 0;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              height: 100vh;
+            }
+            img {
+              width: 9cm;
+              height: 12cm;
+              object-fit: cover;
+            }
+          </style>
+        </head>
+        <body>
+          <img src="${dataUrl}" />
+          <script>
+            window.onload = function () {
+              setTimeout(() => {
+                window.print()
+                window.close()
+              }, 100)
+            }
+          </script>
+        </body>
+      </html>
+    `
+
+    printWindow.document.open()
+    printWindow.document.write(html)
+    printWindow.document.close()
+  } catch (error) {
+    console.error('Erro ao imprimir imagem:', error)
+  }
+}
+
+
   return (
     <div>
       <div className="fields">
@@ -56,6 +117,7 @@ function App() {
           />
         </label>
         <button onClick={handleDownload}>Baixar</button>
+        <button onClick={handlePrintAsImage}>Imprimir</button>
       </div>
 
       <div className="new-parking-card" ref={cardRef}>

@@ -58,15 +58,12 @@ function App() {
             }
             body {
               margin: 0;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              height: 100vh;
+              padding: 0;
             }
             img {
               width: 9cm;
               height: 12cm;
-              object-fit: cover;
+              display: block;
             }
           </style>
         </head>
